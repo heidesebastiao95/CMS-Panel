@@ -285,7 +285,7 @@
 
         $.ajax({
              type:"DELETE",
-             url:`http://dev.cms.com/admin/users/${value}`,
+             url:`http://127.0.0.1:8000/admin/users/${value}`,
              data:{
                  _token:$("input[name=_token]").val(),
                  Value:value
@@ -333,7 +333,7 @@
                 $("#posts_delete_users").removeClass('spinner-border spinner-border-sm');
                 $("#posts_delete_users").addClass('bi bi-trash-fill');
                 $("#btn-delete-users").fadeOut("slow");
-               // $("#app").load("http://dev.cms.com/admin/users");
+               // $("#app").load("http://127.0.0.1:8000/admin/users");
             }
         });//end ajax
         }
@@ -485,7 +485,7 @@ function category_update(){
 
     $.ajax({
     type:"PUT",
-    url:`http://dev.cms.com/admin/categories/${value}`,
+    url:`http://127.0.0.1:8000/admin/categories/${value}`,
     data:{
         _token:$("input[name=_token]").val(),
         name:name
@@ -579,7 +579,7 @@ $("#category-edit-name").addClass(
 
             $.ajax({
              type:"DELETE",
-             url:`http://dev.cms.com/admin/categories/${value}`,
+             url:`http://127.0.0.1:8000/admin/categories/${value}`,
              data:{
                  _token:$("input[name=_token]").val(),
                  Value:value
@@ -587,7 +587,7 @@ $("#category-edit-name").addClass(
              },
              success:function(response){
 
-                $('#app').load(`http://dev.cms.com/admin/categories`);
+                $('#app').load(`http://127.0.0.1:8000/admin/categories`);
 
              }
          })
@@ -641,7 +641,7 @@ $("#category-edit-name").addClass(
             $("#postd_"+value).addClass('spinner-border spinner-border-sm');
             $.ajax({
             type:"DELETE",
-            url:`http://dev.cms.com/admin/posts/${value}`,
+            url:`http://127.0.0.1:8000/admin/posts/${value}`,
             data:{
                 _token:$("input[name=_token]").val(),
                 Value:value
@@ -706,7 +706,7 @@ if(confirm){
     $(`#commentd_${value}`).addClass('spinner-border spinner-border-sm');
     $.ajax({
     type:"DELETE",
-    url:`http://dev.cms.com/admin/comments/${value}`,
+    url:`http://127.0.0.1:8000/admin/comments/${value}`,
     data:{
         _token:$("input[name=_token]").val(),
         Value:value
@@ -733,7 +733,7 @@ function comment_edit(status,value){
 
         $.ajax({
              type:"PUT",
-             url:`http://dev.cms.com/admin/comments/${value}`,
+             url:`http://127.0.0.1:8000/admin/comments/${value}`,
              data:{
                  _token:$("input[name=_token]").val(),
                  Value:status
@@ -741,7 +741,7 @@ function comment_edit(status,value){
              },
              success:function(response){
 
-                $("#app").load(`http://dev.cms.com/admin/comments`);
+                $("#app").load(`http://127.0.0.1:8000/admin/comments`);
                 // $(`#${value}`).removeClass('spinner-border spinner-border-sm');
                 // $(`#${value}`).addClass(`${className}`);
 
@@ -814,7 +814,7 @@ function comment_put(){
 
         $.ajax({
         type:"POST",
-        url:`http://dev.cms.com/admin/comment/create/${post}`,
+        url:`http://127.0.0.1:8000/admin/comment/create/${post}`,
         data:{
         _token:$("input[name=_token]").val(),
         comment:content
@@ -902,7 +902,7 @@ let content = $("#comment-update-content").val();
 
     $.ajax({
     type:"PUT",
-    url:`http://dev.cms.com/admin/comment/update/${comment}`,
+    url:`http://127.0.0.1:8000/admin/comment/update/${comment}`,
     data:{
     _token:$("input[name=_token]").val(),
     comment:content
@@ -1005,7 +1005,7 @@ $("#comment-update-content").addClass(
                     },
                     success:function(response){
                     $("#app")
-                    .load(`http://dev.cms.com/admin/talk-with/${receptor}`);
+                    .load(`http://127.0.0.1:8000/admin/talk-with/${receptor}`);
                     }
                 })
             }

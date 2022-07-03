@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\UsersRequest;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -19,12 +17,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::simplePaginate(5);
-
-        return view('admin.users.index',[
-            'users'=> $users,
+        $users = User::all();
+        
+        return response()->json([
+            'data'=> $users
         ]);
-
     }
 
     /**
@@ -34,7 +31,7 @@ class UserController extends Controller
      */
     public function create()
     {
-       // return view('admin.users.create');
+        //
     }
 
     /**
@@ -49,7 +46,7 @@ class UserController extends Controller
 
         if(!(User::where('email',$request->email)->exists())){
 
-        User::create([
+        return User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
@@ -59,15 +56,11 @@ class UserController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        return response()->json([
-            'success'=> 'Successfuly'
-        ]);
         }
 
       return response()->json([
         'error'=>"the email already exists"
-      ],300);
-
+      ],200);
     }
 
     /**
@@ -78,7 +71,16 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+       $user = User::find($id);
+
+       if(!User::where('id',$id)->exists())
+       {
+            return response()->json([
+                'Error'=> 'User not Found'
+            ],204);
+       }
+
+       return $user;
     }
 
     /**
@@ -89,11 +91,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data = User::find($id);
-        //$data['id']
-        return view('admin.users.edit',[
-            'user' => $data
-        ]);
+        //
     }
 
     /**
@@ -105,13 +103,13 @@ class UserController extends Controller
      */
     public function update(UsersRequest $request, $id)
     {
-        $validated = $request->validated();
-
+       // $validated = $request->safe()->only(['password']);
+        $request->validated();
         $user = User::find($id);
 
         if(Hash::check($request->password,$user->password))
         {
-            User::where('id',$id)
+          return  User::where('id',$id)
                 ->update([
                     'name' => $request->name,
                     'username' => $request->username,
@@ -120,14 +118,11 @@ class UserController extends Controller
                     'gender' =>$request->gender,
                    // 'img', $request->photo,
                     'phone_namber' => $request->phone,
-                     'password' => Hash::make($request->newPassword)
+                    // 'password' => Hash::make($request->newPassword)
                 ]);
-
-        return response()->json(['success'=>"SuccessFuly"]);
         }
 
-       return response()->json(['error'=>'incorrect password'],200);
-
+       return response()->json(['error'=>'incorrect password'],204);
     }
 
     /**
@@ -139,31 +134,6 @@ class UserController extends Controller
     public function destroy($id)
     {
         User::where('id',$id)->delete();
-        return response()->json(['succes'=>'ok']);
-    }
-
-    public function deleteSelected(Request $request)
-    {
-        $values = $request->ids;
-        User::whereIn('id',$values)->delete();
-
         return response()->json(['success'=>'ok']);
-    }
-
-    public function updatePhoto(Request $request, $id)
-    {
-        $request->validate([
-            'user_photo' => ['required','mimes:png,jpg,jpeg','max:5048']
-        ]);
-
-        $newName = time().'-'.$request->user_photo->getClientOriginalName().'.'.$request->user_photo->extension();
-        $request->file('user_photo')->move(public_path('images'),$newName);
-
-        User::where('id',$id)->update([
-            'img' => $newName
-        ]);
-
-        return redirect()->back();
-
     }
 }

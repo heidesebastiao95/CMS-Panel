@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -15,15 +13,10 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
-
     public function index()
     {
         $categories = Category::simplePaginate(5);
-
-        return view('admin.categories.index',[
-            'categories'=>$categories,
-        ]);
+        return $categories;
     }
 
     /**
@@ -31,9 +24,9 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-
+        //
     }
 
     /**
@@ -44,22 +37,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-
         if(!(Category::where('name',$request->name)->exists())){
 
-             $request->validate([
-                'name'=>'required|string'
-            ]);
+            $request->validate([
+               'name'=>'required|string'
+           ]);
 
-            Category::create([
-                'name'=> $request->name,
-            ]);
+           return Category::create([
+               'name'=> $request->name,
+           ]);
 
-            return response()->json(['success'=>'successfuly']);
 
-        }
+       }
 
-      return response()->json(['error'=>'the category already exists!'],300);
+     return response()->json(['error'=>'the category already exists!']);
     }
 
     /**
@@ -70,9 +61,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $data = Category::find($id);
-         return $data;
+         $categories = Category::simplePaginate(5);
 
+         return $categories;
     }
 
     /**
@@ -83,7 +74,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $data = Category::find($id);
+        //
     }
 
     /**
@@ -95,27 +86,17 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-
-        if(!(Category::where('name',$request->name)->exists())){
-
+        if(!(Category::where('name',$request->name)->exists()))
+        {
+            $name = $request->name;
             $validate = $request->validate([
                 'name'=>'required|string'
             ]);
 
-            $name = $request->name;
-
-
-            Category::where('id',$id)
-                    ->update(['name'=> $name]);
-
-            return response()->json(['success'=>'successfuly']);
-
+           return Category::where('id',$id)->update(['name'=> $name]);
         }
 
-      return response()->json(['error'=>'the category already exits!'],300);
-
-
-
+            return response()->json(['error'=>'the category already exits!']);
     }
 
     /**
@@ -127,14 +108,6 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         Category::where('id',$id)->delete();
-        return response()->json(['succes'=>'ok']);
-    }
-
-    public function deleteAllCategory(Request $request)
-    {
-        $values = $request->ids;
-        Category::whereIn('id',$values)->delete();
-
-        return response()->json(['success'=>'ok']);
+        return response()->json(['Successfully'=>'ok']);
     }
 }

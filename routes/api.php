@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix'=>'v1','middleware'=>['auth:sanctum']],function(){
-    //Scape Middleware
+    //Escape Middleware
 Route::post('login',[AuthenticationController::class,'login'])->withoutMiddleware(['auth:sanctum']);
-Route::post('logout',[AuthenticationController::class,'logout'])->withoutMiddleware(['auth:sanctum']);
 Route::post('register',[AuthenticationController::class,'register'])->withoutMiddleware(['auth:sanctum']);
+Route::post('logout',[AuthenticationController::class,'logout']);
 
 Route::apiResource('/user',UserController::class);
 Route::apiResource('/post',PostController::class);

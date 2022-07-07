@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UsersRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -17,11 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        
-        return response()->json([
-            'data'=> $users
-        ]);
+        return UserResource::collection(User::all());
     }
 
     /**
@@ -42,11 +39,11 @@ class UserController extends Controller
      */
     public function store(UsersRequest $request)
     {
-        $validate = $request->validated();
+        $request->validated();
 
         if(!(User::where('email',$request->email)->exists())){
 
-        return User::create([
+        $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
@@ -55,6 +52,8 @@ class UserController extends Controller
             'phone_namber' => $request->phone,
             'password' => Hash::make($request->password)
         ]);
+
+        return new UserResource($user);
 
         }
 
@@ -80,7 +79,7 @@ class UserController extends Controller
             ],204);
        }
 
-       return $user;
+       return new UserResource($user);
     }
 
     /**
@@ -109,7 +108,7 @@ class UserController extends Controller
 
         if(Hash::check($request->password,$user->password))
         {
-          return  User::where('id',$id)
+          $user =  User::where('id',$id)
                 ->update([
                     'name' => $request->name,
                     'username' => $request->username,
@@ -120,6 +119,8 @@ class UserController extends Controller
                     'phone_namber' => $request->phone,
                     // 'password' => Hash::make($request->newPassword)
                 ]);
+
+                return new UserResource($user);
         }
 
        return response()->json(['error'=>'incorrect password'],204);

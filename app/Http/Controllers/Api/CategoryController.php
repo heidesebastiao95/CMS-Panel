@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -15,8 +16,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::simplePaginate(5);
-        return $categories;
+        return CategoryResource::collection(Category::all());
     }
 
     /**
@@ -43,14 +43,16 @@ class CategoryController extends Controller
                'name'=>'required|string'
            ]);
 
-           return Category::create([
+           $category = Category::create([
                'name'=> $request->name,
            ]);
+
+           return new CategoryResource($category);
 
 
        }
 
-     return response()->json(['error'=>'the category already exists!']);
+     return response()->json(['Message'=>'the category already exists!']);
     }
 
     /**
@@ -61,9 +63,11 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-         $categories = Category::simplePaginate(5);
+         $category = Category::find($id);
 
-         return $categories;
+         if(!$category) return response()->json(['Message'=>'Category not found'],200);
+
+         return new CategoryResource($category);
     }
 
     /**

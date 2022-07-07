@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -17,9 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::simplePaginate(5);
-
-        return $posts;
+       return PostResource::collection(Post::all());
     }
 
     /**
@@ -46,14 +45,14 @@ class PostController extends Controller
             'category' =>['required','string'],
             'photo' => ['required','mimes:png,jpg,jpeg','max:5048']
         ]);
-        
+
         $newImageName = time() .'-'. $request->title . '.'. $request->file('photo')->extension();
 
         $request->file('photo')->move(public_path('images'),$newImageName);
-        
+
         $categoryId = Category::where('name',$request->category)->value('id');
 
-        return Post::create([
+        $post = Post::create([
             'title' => $request->title,
             'user_id' => Auth::user()->id,
             'category_id' => $categoryId,
@@ -61,7 +60,9 @@ class PostController extends Controller
             'image' => $newImageName
         ]);
 
-      
+        return new PostResource($post);
+
+
     }
 
     /**
@@ -77,11 +78,11 @@ class PostController extends Controller
         if(!Post::where('id',$id)->exists())
         {
              return response()->json([
-                 'Error'=> 'User not Found'
+                 'Error'=> 'Post not Found'
              ],204);
         }
- 
-        return $post;
+
+        return new PostResource($post);
     }
 
     /**
@@ -112,12 +113,14 @@ class PostController extends Controller
 
         $categoryId = Category::where('name',$request->category)->value('id');
 
-        return Post::where('id',$id)->update([
+        $post = Post::where('id',$id)->update([
             'title' => $request->title,
             'category_id' => $categoryId,
             'content' => $request->content,
             'status' => $request->status
         ]);
+
+        return new PostResource($post);
     }
 
     /**

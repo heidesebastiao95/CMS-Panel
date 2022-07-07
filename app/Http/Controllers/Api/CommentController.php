@@ -7,6 +7,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\CommentResource;
 
 class CommentController extends Controller
 {
@@ -17,8 +18,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::simplePaginate(10);
-        return $comments;
+       return CommentResource::collection(Comment::all());
     }
 
     /**
@@ -43,18 +43,20 @@ class CommentController extends Controller
             'comment' => 'required|string'
         ]);
 
-            if(Post::where('id',$post)->exists())
-            {
-               return Comment::create([
-                    'post_id' => $post,
-                    'user_id' => Auth::user()->id,
-                    'content'=> $request->comment
-                ]);
-            }
-
-            return response()->json([
-                'Error'=> 'Post Not Found'
+        if(Post::where('id',$post)->exists())
+        {
+            $comment = Comment::create([
+                'post_id' => $post,
+                'user_id' => $request->user()->id,
+                'content'=> $request->comment
             ]);
+
+            return new CommentResource($comment);
+        }
+
+        return response()->json([
+            'Error'=> 'Post Not Found'
+        ]);
     }
 
     /**
@@ -72,7 +74,9 @@ class CommentController extends Controller
             ]);
         }
 
-        return Comment::find($id);
+        $comment = Comment::find($id);
+
+        return new CommentResource($comment);
     }
 
     /**
@@ -99,18 +103,19 @@ class CommentController extends Controller
             'status'=> 'required|string|in:approved,unapproved',
             'content'=> 'required|string'
         ]);
+        
          $status = $request->status;
 
         if(Comment::where('id',$id)->exists())
         {
-           
-           return 
-                Comment::where('id',$id)->update([
+              $comment =  Comment::where('id',$id)->update([
                 'status' => $status,
                 'content'=> $request->content
             ]);
+
+            return new CommentResource($comment);
         }
-        
+
         return response()->json([
             'Error'=> 'Comment Not Found'
         ],204);
@@ -131,10 +136,10 @@ class CommentController extends Controller
                 'Successfully'=> 'ok'
             ]);
         }
-        
+
         return response()->json([
             'Error'=> 'Comment Not Found'
         ],204);
-       
+
     }
 }

@@ -5,7 +5,7 @@ for(var i = 0; i < sidebarItems.length; i++) {
     let sidebarItem = sidebarItems[i];
 	sidebarItems[i].querySelector('.sidebar-link').addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         let submenu = sidebarItem.querySelector('.submenu');
         if( submenu.classList.contains('active') ) submenu.style.display = "block"
 
@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     if(w < 1200) {
         document.getElementById('sidebar').classList.remove('active');
     }
-    
+
 });
 window.addEventListener('resize', (event) => {
     var w = window.innerWidth;

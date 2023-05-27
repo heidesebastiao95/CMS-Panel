@@ -88,7 +88,9 @@
                                         </div>
                                         <div class="card-body">
                                             <div class="form-group with-title mb-3">
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="7" name="content" value="'{{ $post->content }}'" placeholder="{{ $post->content }}"></textarea>
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="7" name="content" value="'{{ $post->content }}'" placeholder="{{ $post->content }}">
+                                                {{ $post->content }}
+                                                </textarea>
                                                 <label>Edit your post</label>
                                             </div>
                                         </div>

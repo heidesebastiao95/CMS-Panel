@@ -17,7 +17,7 @@
                 <li class="sidebar-item {{ Route::is('dashboard')? 'active' : '' }} {{ Route::is('home')? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
-                        <span>Dasboard </span>
+                        <span>Dashboard </span>
                     </a>
                 </li>
                 <li class="sidebar-item {{ Route::is('categories.index')? 'active' : '' }}">

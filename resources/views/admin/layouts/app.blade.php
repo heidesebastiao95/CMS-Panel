@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/pages/auth.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/widgets/chat.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/admin/images/favicon.svg') }}" type="image/x-icon">
+   <link rel="shortcut icon" href="{{ asset('assets/admin/images/icon.ico') }}" type="image/x-icon">
 
     
     {{-- <script src="{{ asset('assets/admin/js/bootstrap.bundle.min.js') }}"></script> --}}
